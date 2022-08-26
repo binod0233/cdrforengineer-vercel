@@ -1,21 +1,26 @@
 import React from "react";
-import Head from 'next/head'
+import Head from "next/head";
 import { Col, Container, Row } from "react-bootstrap";
-import {useRouter} from 'next/router'
-
-
-const RefundPolicy = () => {
-  const router = useRouter()
-  const canonicalUrl = (`https://www.cdrforengineer.com` + (router.asPath === "/" ? "": router.asPath)).split("?")[0];
+import { useRouter } from "next/router";
+import Seo from "../components/Seo";
+import parse from "html-react-parser";
+const RefundPolicy = ({ refundRes }) => {
+  const router = useRouter();
+  const canonicalUrl = (
+    `https://www.cdrforengineer.com` +
+    (router.asPath === "/" ? "" : router.asPath)
+  ).split("?")[0];
+  const { hero, seo } = refundRes;
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>Refund Policy | CDR For Engineer</title>
         <meta name="description" content="Refund Policy | CDR For Engineer" />
         <link rel="canonical" href={canonicalUrl} />
+      </Head> */}
+      <Seo seo={seo} />
 
-      </Head>
       <div
         style={{
           background: `linear-gradient(
@@ -50,9 +55,10 @@ const RefundPolicy = () => {
             color: "#000000",
           }}
         >
-          Refund Policy.
+          {hero?.title}
         </h1>
-        <Row>
+        {hero?.paragraph && parse(hero.paragraph)}
+        {/* <Row>
           <Col>
             <p
               className="my-md-5 my-3"
@@ -104,10 +110,25 @@ const RefundPolicy = () => {
             </p>
           </Col>
           <Col></Col>
-        </Row>
+        </Row> */}
       </Container>
     </>
   );
+};
+export const getStaticProps = async () => {
+  const { NEXT_STRAPI_API_URL } = process.env;
+  const refund = await fetch(
+    NEXT_STRAPI_API_URL + "refund-policy?populate=deep"
+  );
+
+  const refundRes = await refund.json();
+
+  return {
+    props: {
+      refundRes: refundRes?.data?.attributes || "",
+    },
+    revalidate: 1,
+  };
 };
 
 export default RefundPolicy;

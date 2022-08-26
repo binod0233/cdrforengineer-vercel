@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "next/head";
-import {useRouter} from 'next/router'
+import { useRouter } from "next/router";
 import Hero from "../../components/Hero";
 import CDRReportAccepted from "../../components/Home/CDRReportAccepted";
 import FreeDownload from "../../components/Samples/FreeDownload";
@@ -8,33 +8,39 @@ import HighQualityCDRSamples from "../../components/Samples/HighQualityCDRSample
 import HowHelps from "../../components/Samples/HowHelps";
 import SamplesForEngineers from "../../components/Samples/SamplesForEngineers";
 import WhyRely from "../../components/Samples/WhyRely";
+import Seo from "../../components/Seo";
+import parse from "html-react-parser";
 
-const Samples = () => {
-  const router = useRouter()
+const Samples = ({ sampleRes }) => {
+  const router = useRouter();
+  console.log("sampleRes", sampleRes);
+  const { hero, sample, seo, shared, title, free } = sampleRes;
 
-  const canonicalUrl = (`https://www.cdrforengineer.com` + (router.asPath === "/" ? "": router.asPath)).split("?")[0];
+  const canonicalUrl = (
+    `https://www.cdrforengineer.com` +
+    (router.asPath === "/" ? "" : router.asPath)
+  ).split("?")[0];
 
   return (
     <div>
-      <Head>
+      {/* <Head>
         <title>CDR Samples</title>
-        <meta name='description' content='Download cdr report samples'/>
+        <meta name="description" content="Download cdr report samples" />
         <link rel="canonical" href={canonicalUrl} />
-
-      </Head>
+      </Head> */}
+      <Seo seo={seo} />
       <Hero
-        title="Engineers Australia approved 
-CDR samples for Engineers."
-        details="Your professional assistance for CDR report in Migration Skills 
-Assessment from Engineers Australia. Speak with our experts 
-to avoid possible rejections."
+        title={hero?.title}
+        details={hero?.paragraph && parse(hero.paragraph)}
       />
-      <SamplesForEngineers />
+      <SamplesForEngineers data={sample} />
       <CDRReportAccepted
-        title="You deserve the best CDR results,  so get started with us"
+        title={shared?.data?.attributes?.title}
+        data={
+          shared?.data?.attributes?.paragraph &&
+          parse(shared.data.attributes.paragraph)
+        }
         buttonName="Contact Us"
-        data="All our professional and premium quality report samples for each and every category of the available 
-Engineering professions are given below."
       />
       <HighQualityCDRSamples />
       <CDRReportAccepted
@@ -43,11 +49,25 @@ Engineering professions are given below."
         data="CDR For Engineer is known as one of the Top and best CDR writing service provider in Australia. To get help, connect 
         with us and we with our Expert Experienced CDR writers are always there to help you at any time."
       />
-      <HowHelps />
+      <HowHelps data={sampleRes} />
       <WhyRely />
-      <FreeDownload />
+      <FreeDownload data={free} />
     </div>
   );
 };
+
+export async function getStaticProps({ params }) {
+  const { NEXT_STRAPI_API_URL } = process.env;
+
+  const samples = await fetch(NEXT_STRAPI_API_URL + `cdr-sample?populate=deep`);
+  const sampleRes = await samples.json();
+
+  return {
+    props: {
+      sampleRes: sampleRes?.data?.attributes || "",
+    },
+    revalidate: 1,
+  };
+}
 
 export default Samples;

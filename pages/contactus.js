@@ -1,33 +1,39 @@
 import React from "react";
-import Head from 'next/head'
-import {useRouter} from 'next/router'
+import Head from "next/head";
+import { useRouter } from "next/router";
 import { Card, Container, Row, Button } from "react-bootstrap";
 import PurpleHeading from "../components/PurpleHeading";
 import TextParagraph from "../components/TextParagraph";
 import ContactUsForm from "../components/Contactus/ContactUsForm";
-import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import FmdGoodRoundedIcon from '@mui/icons-material/FmdGoodRounded';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-
-const ContactUs = () => {
-  const router = useRouter()
-  const canonicalUrl = (`https://www.cdrforengineer.com` + (router.asPath === "/" ? "": router.asPath)).split("?")[0];
+import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import FmdGoodRoundedIcon from "@mui/icons-material/FmdGoodRounded";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import Seo from "../components/Seo";
+import parse from "html-react-parser";
+const ContactUs = ({ contactRes }) => {
+  const router = useRouter();
+  const canonicalUrl = (
+    `https://www.cdrforengineer.com` +
+    (router.asPath === "/" ? "" : router.asPath)
+  ).split("?")[0];
+  const { hero, seo, shared } = contactRes;
 
   return (
     <Container>
-      <Head>
+      {/* <Head>
       <title>Contact Us | CDR For Engineer</title>
       <meta name='description' content='We are available 24 hours 7 days and you can reach to us through different medium like phone email  | CDR For Engineer'/>
       <link rel="canonical" href={canonicalUrl} />
 
-      </Head>
-      <PurpleHeading title="Contact Us" />
+      </Head> */}
+      <Seo seo={seo} />
+      <PurpleHeading title={hero?.title} />
       <TextParagraph
-        content="Any questions or remarks? Feel free to contact us if you need any assistance or have any questions related to our service. "
+        content={hero?.paragraph && parse(hero.paragraph)}
         family="Arial"
         centerAlign
       />
@@ -41,7 +47,7 @@ const ContactUs = () => {
           }}
         >
           <div className="d-flex contactUsFull">
-            <div  style={{ flex: "0.4" }} className="p-1 contactUsHalf">
+            <div style={{ flex: "0.4" }} className="p-1 contactUsHalf">
               <Card
                 className="p-md-5 p-2"
                 style={{ background: "#3D1F91", borderRadius: "12px" }}
@@ -94,8 +100,10 @@ const ContactUs = () => {
                     fontFamily: "Arial",
                   }}
                 >
-                  <WhatsAppIcon className="me-3" style={{color: "#F8929D", fontSize: "22px" }}/>
-                  
+                  <WhatsAppIcon
+                    className="me-3"
+                    style={{ color: "#F8929D", fontSize: "22px" }}
+                  />
                   +61 482 072 510
                 </p>
 
@@ -107,8 +115,10 @@ const ContactUs = () => {
                     fontFamily: "Arial",
                   }}
                 >
-                  <EmailOutlinedIcon  className='me-3' style={{ color: "#F8929D", fontSize: "22px" }}/>
-                  
+                  <EmailOutlinedIcon
+                    className="me-3"
+                    style={{ color: "#F8929D", fontSize: "22px" }}
+                  />
                   info@cdrforengineer.com
                 </p>
 
@@ -120,9 +130,10 @@ const ContactUs = () => {
                     fontFamily: "Arial",
                   }}
                 >
-                  <FmdGoodRoundedIcon className="me-3"
-                    style={{ color: "#F8929D", fontSize: "22px" }}/>
-                  
+                  <FmdGoodRoundedIcon
+                    className="me-3"
+                    style={{ color: "#F8929D", fontSize: "22px" }}
+                  />
                   102 Street 2714 Don
                 </p>
 
@@ -139,43 +150,50 @@ const ContactUs = () => {
                 </h1>
                 <Row>
                   <div className="d-flex flex-row my-2">
-                    <FacebookOutlinedIcon style={{
+                    <FacebookOutlinedIcon
+                      style={{
                         fontSize: "20px",
                         color: "white",
                         cursor: "pointer",
-                      }} className='me-3'/>
-                   <TwitterIcon  style={{
-                        fontSize: "20px",
-                        color: "white",
-                        cursor: "pointer",
-                      }} 
-                      className='mx-3'/>
-                    <InstagramIcon style={{
+                      }}
+                      className="me-3"
+                    />
+                    <TwitterIcon
+                      style={{
                         fontSize: "20px",
                         color: "white",
                         cursor: "pointer",
                       }}
                       className="mx-3"
-/>
-<LinkedInIcon style={{
+                    />
+                    <InstagramIcon
+                      style={{
                         fontSize: "20px",
                         color: "white",
                         cursor: "pointer",
                       }}
-                      className="mx-3"/>
-                    
+                      className="mx-3"
+                    />
+                    <LinkedInIcon
+                      style={{
+                        fontSize: "20px",
+                        color: "white",
+                        cursor: "pointer",
+                      }}
+                      className="mx-3"
+                    />
                   </div>
                 </Row>
               </Card>
             </div>
-            <div     style={{ flex: "0.6" }} className="px-4 contactUsHalf">
+            <div style={{ flex: "0.6" }} className="px-4 contactUsHalf">
               <ContactUsForm />
             </div>
           </div>
         </div>
       </div>
       <Row className="mb-5">
-        <PurpleHeading title="Stay connected with CDR For Engineer! Contact us via our Social Channels" />
+        <PurpleHeading title={shared?.data?.attributes?.title} />
         <Row className="mt-3 mb-5">
           <div className="d-flex justify-content-center align-items-center mb-4">
             <Button
@@ -184,12 +202,12 @@ const ContactUs = () => {
                 fontSize: "20px",
                 background: "#FA2545",
                 border: "none",
-                paddingRight: "20px", 
+                paddingRight: "20px",
                 paddingLeft: "20px",
               }}
             >
               {" "}
-              <WhatsAppIcon className='me-2'/>
+              <WhatsAppIcon className="me-2" />
               Whatsapp
             </Button>
             <Button
@@ -208,8 +226,8 @@ const ContactUs = () => {
                 rel="noreferrer"
                 style={{ textDecoration: "none", color: "white" }}
               >
-                          <FacebookOutlinedIcon className='m-1'/>
-Facebook
+                <FacebookOutlinedIcon className="m-1" />
+                Facebook
               </a>
             </Button>
           </div>
@@ -217,6 +235,20 @@ Facebook
       </Row>
     </Container>
   );
+};
+
+export const getStaticProps = async () => {
+  const { NEXT_STRAPI_API_URL } = process.env;
+  const contact = await fetch(NEXT_STRAPI_API_URL + "contact?populate=deep");
+
+  const contactRes = await contact.json();
+
+  return {
+    props: {
+      contactRes: contactRes?.data?.attributes || "",
+    },
+    revalidate: 1,
+  };
 };
 
 export default ContactUs;
