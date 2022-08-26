@@ -424,7 +424,7 @@ export async function getStaticPaths() {
         slug: blog.attributes.slug,
       },
     })),
-    fallback: false,
+    fallback: true,
   };
 }
 
