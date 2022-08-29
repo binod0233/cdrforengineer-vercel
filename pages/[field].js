@@ -12364,11 +12364,9 @@ report writing."
 };
 
 export async function getStaticPaths() {
-  const { NEXT_STRAPI_DEV_API_URL } = process.env;
+  const { NEXT_STRAPI_API_URL } = process.env;
 
-  const fields = await fetch(
-    NEXT_STRAPI_DEV_API_URL + "anzscocodes?populate=deep"
-  );
+  const fields = await fetch(NEXT_STRAPI_API_URL + "anzscocodes?populate=deep");
   const allField = await fields.json();
   return {
     paths: allField.data.map((field) => ({
@@ -12381,10 +12379,10 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const { NEXT_STRAPI_DEV_API_URL } = process.env;
+  const { NEXT_STRAPI_API_URL } = process.env;
 
   const field = await fetch(
-    NEXT_STRAPI_DEV_API_URL + `anzscocodes/${params.field}?populate=deep`
+    NEXT_STRAPI_API_URL + `anzscocodes/${params.field}?populate=deep`
   );
   const fieldRes = await field.json();
 
